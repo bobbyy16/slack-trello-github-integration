@@ -4,7 +4,6 @@ const { postToSlack } = require("./slack.controllers.js");
 const handleGitHubEvent = async (req, res) => {
   const eventType = req.headers["x-github-event"];
   const eventData = req.body;
-
   try {
     switch (eventType) {
       case "push":
