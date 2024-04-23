@@ -1,4 +1,5 @@
 # Logs
+.env
 logs
 *.log
 npm-debug.log*
@@ -22,6 +23,7 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 *.lcov
+*.env
 
 # nyc test coverage
 .nyc_output
