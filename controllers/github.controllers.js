@@ -4,20 +4,21 @@ const { postToSlack } = require("./slack.controllers.js");
 const handleGitHubEvent = async (req, res) => {
   const eventType = req.headers["x-github-event"];
   const eventData = req.body;
+
   try {
     switch (eventType) {
-      case "push":
+      case "Pushes":
         await createTrelloCard("push", eventData);
         await postToSlack("New push event!");
         break;
-      case "pull_request":
+      case "Pull requests":
         await createTrelloCard("pull request", eventData);
         await postToSlack("New pull request!");
         break;
-      // case "issues":
-      //   await createTrelloCard("issues", eventData);
-      //   await postToSlack("New issue!");
-      //   break; // Make sure to include break statement here
+      case "Issues":
+        await createTrelloCard("issues", eventData);
+        await postToSlack("New issue!");
+        break; // Make sure to include break statement here
       default:
         console.log("Unhandled GitHub event type:", eventType);
     }
