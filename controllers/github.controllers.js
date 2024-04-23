@@ -1,21 +1,29 @@
-const axios = require("axios");
-require("dotenv").config();
+const { createTrelloCard } = require("./trello.controllers.js");
 
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+const handleGitHubEvent = async (req, res) => {
+  const eventType = req.headers["x-github-event"];
+  const eventData = req.body;
 
-exports.handleGitHubEvent = (req, res) => {
-  const event = req.headers["x-github-event"];
-  const payload = req.body;
+  try {
+    switch (eventType) {
+      case "push":
+        await createTrelloCard("push", eventData); // Adjust the card title and description as needed
+        break;
+      case "pull_request":
+        await createTrelloCard("pull request", eventData); // Adjust the card title and description as needed
+        break;
+      case "issues":
+        await createTrelloCard("issues", eventData); // Adjust the card title and description as needed
+        break;
+      default:
+        console.log("Unhandled GitHub event type:", eventType);
+    }
 
-  // Forward the GitHub event payload to Slack
-  axios
-    .post(SLACK_WEBHOOK_URL, payload)
-    .then((response) => {
-      console.log(`GitHub event forwarded to Slack: ${event}`);
-      res.status(200).send("Event forwarded to Slack");
-    })
-    .catch((error) => {
-      console.error("Error forwarding event to Slack:", error);
-      res.status(500).send("Error forwarding event to Slack");
-    });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error handling GitHub event:", error);
+    res.sendStatus(500);
+  }
 };
+
+module.exports = { handleGitHubEvent };
