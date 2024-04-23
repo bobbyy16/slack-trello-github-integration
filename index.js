@@ -1,15 +1,12 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const githubRoutes = require("./routes/github.routes.js");
 const trelloRoutes = require("./routes/trello.routes.js");
-// const slackRoutes = require("./routes/slack.routes.js");
-
+const slackRoutes = require("./routes/slack.routes.js");
 require("dotenv").config();
 
 const app = express();
 
 app.use(express.json());
-app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("hey boooi");
@@ -17,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.use("/github", githubRoutes);
 app.use("/trello", trelloRoutes);
-// app.use("/slack", slackRoutes);
+app.use("/slack", slackRoutes);
 
 const PORT = process.env.PORT || 3000;
 
