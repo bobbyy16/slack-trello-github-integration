@@ -1,11 +1,11 @@
 require("dotenv").config();
 const { IncomingWebhook } = require("@slack/webhook");
-const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
 
-// Function to post message to Slack channel
+const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+const webhook = new IncomingWebhook(webhookUrl);
+
 const postToSlack = async (message) => {
   try {
-    console.log("SLACK_WEBHOOK_URL:", process.env.SLACK_WEBHOOK_URL); // Add this line for debugging
     await webhook.send({
       text: message,
     });
@@ -15,4 +15,4 @@ const postToSlack = async (message) => {
   }
 };
 
-module.exports = postToSlack;
+module.exports = { postToSlack };
