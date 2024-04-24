@@ -1,6 +1,6 @@
 # GitHub-Trello-Slack Integration
 
-This project enables seamless integration between GitHub, Trello, and Slack, facilitating efficient project management and collaboration workflows.
+This project enables seamless integration between GitHub, Trello, and Slack, facilitating efficient project management and collaboration workflows
 
 ![eraser.io](https://github.com/bobbyy16/slack-trello-github-integration/blob/main/pictures/flow.png)
 
