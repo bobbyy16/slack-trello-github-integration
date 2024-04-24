@@ -2,6 +2,8 @@
 
 This project enables seamless integration between GitHub, Trello, and Slack, facilitating efficient project management and collaboration workflows.
 
+![eraser.io](https://ibb.co/HYwQ4WT)
+
 ## Table of Contents
 
 - [Overview](#overview)
