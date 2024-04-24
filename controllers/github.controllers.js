@@ -1,16 +1,8 @@
 const { postToSlack } = require("./slack.controllers.js");
 const { createTrelloCard } = require("./trello.controllers.js");
+
 const handleGitHubEvent = async (req, res) => {
   try {
-    const eventType = req.headers["x-github-event"].toUpperCase(); // Convert to uppercase for consistency
-    console.log("Received GitHub event type:", eventType);
-
-    const eventData = req.body;
-
-    let eventTitle = `New GitHub ${eventType} event`;
-
-    let eventDescription = `Event Type: ${eventType}\n\n`;
-
     if (
       [
         "STATUS",
@@ -25,6 +17,15 @@ const handleGitHubEvent = async (req, res) => {
       res.setHeader("x-github-event", eventType);
       return res.status(200).json({ success: true });
     }
+
+    const eventType = req.headers["x-github-event"].toUpperCase();
+    console.log("Received GitHub event type:", eventType);
+
+    const eventData = req.body;
+
+    let eventTitle = `New GitHub ${eventType} event`;
+
+    let eventDescription = `Event Type: ${eventType}\n\n`;
 
     switch (eventType) {
       case "ISSUES":
