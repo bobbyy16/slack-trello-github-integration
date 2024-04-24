@@ -4,26 +4,32 @@ const trello = new Trello(
   process.env.TRELLO_API_TOKEN
 );
 
-// Update list IDs according to your Trello board
 const listIds = {
-  PUSH: "66288f3d82cac29141b8eb6c",
-  PULL_REQUESTs: "66288f3d82cac29141b8eb6b",
-  ISSUES: "66288f3d82cac29141b8eb6a",
-  MERGE: "66289bb5c4ea40e9de6125ac",
+  ISSUES: process.env.ISSUES_CARD,
+  PULL_REQUEST: process.env.PULL_REQUEST_CARD,
+  PUSH: process.env.PUSH_CARD,
+  OTHERS: process.env.OTHERS_CARD,
 };
 
 const createTrelloCard = async (title, description, eventType) => {
   try {
-    // Get the list ID based on the event type
-    const listId = listIds[eventType];
+    let listId;
 
-    // If the eventType is not recognized, log an error and return
-    if (!listId) {
-      console.log("Unknown event type:", eventType);
-      return;
+    switch (eventType) {
+      case "ISSUES":
+        listId = listIds.ISSUES;
+        break;
+      case "PULL_REQUEST":
+        listId = listIds.PULL_REQUEST;
+        break;
+      case "PUSH":
+        listId = listIds.PUSH;
+        break;
+
+      default:
+        listId = listIds.OTHERS;
     }
 
-    // Add the card to the corresponding list
     const card = await trello.addCard(title, description, listId);
     console.log("Trello card created:", card);
   } catch (error) {

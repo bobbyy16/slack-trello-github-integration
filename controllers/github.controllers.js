@@ -1,45 +1,56 @@
-// githubEventHandler.js
 const { postToSlack } = require("./slack.controllers.js");
 const { createTrelloCard } = require("./trello.controllers.js");
-
 const handleGitHubEvent = async (req, res) => {
   try {
-    // Extract GitHub event type
     const eventType = req.headers["x-github-event"].toUpperCase(); // Convert to uppercase for consistency
-
     console.log("Received GitHub event type:", eventType);
 
-    // Store webhook data
-    const webhooks = {
-      COMMIT: [],
-      PUSH: [],
-      MERGE: [],
-      ISSUES: [],
-      PULL_REQUESTS: [], // Match the case with the received event type
-    };
+    const eventData = req.body;
 
-    // Check if eventType is valid
-    if (!(eventType in webhooks)) {
-      throw new Error(`Invalid GitHub event type: ${eventType}`);
+    let eventTitle = `New GitHub ${eventType} event`;
+
+    let eventDescription = `Event Type: ${eventType}\n\n`;
+
+    if (
+      [
+        "STATUS",
+        "CHECK_RUN",
+        "CHECK_SUITE",
+        "DEPLOYMENT",
+        "DEPLOYMENT_STATUS",
+        "ISSUE_COMMENT",
+      ].includes(eventType)
+    ) {
+      console.log("Ignoring event type:", eventType);
+      res.setHeader("x-github-event", eventType);
+      return res.status(200).json({ success: true });
     }
 
-    // Extract payload data
-    const { payloadUrl, secret } = req.body;
+    switch (eventType) {
+      case "ISSUES":
+        eventDescription += `Issue Number: ${eventData.issue.number}\n`;
+        eventDescription += `Issue Title: ${eventData.issue.title}\n`;
+        eventDescription += `Issue URL: ${eventData.issue.html_url}\n`;
+        await createTrelloCard(eventTitle, eventDescription, eventType);
+        break;
+      case "PULL_REQUEST":
+        eventDescription += `Pull Request Number: ${eventData.pull_request.number}\n`;
+        eventDescription += `Pull Request Title: ${eventData.pull_request.title}\n`;
+        eventDescription += `Pull Request URL: ${eventData.pull_request.html_url}\n`;
+        await createTrelloCard(eventTitle, eventDescription, eventType);
+        break;
+      case "PUSH":
+        eventDescription += `Pusher Username: ${eventData.pusher.name}\n`;
+        eventDescription += `Commits Count: ${eventData.commits.length}\n`;
+        eventDescription += `Compare URL: ${eventData.compare}\n`;
+        await createTrelloCard(eventTitle, eventDescription, eventType);
+        break;
+      default:
+        console.log("Unknown event type:", eventType);
+    }
 
-    // Store webhook data based on event type
-    webhooks[eventType].push({ payloadUrl, secret });
+    await postToSlack(eventTitle + "\n" + eventDescription);
 
-    // Send notification to Slack
-    await postToSlack(`Received GitHub event: ${eventType}`);
-
-    // Create Trello card based on event type
-    await createTrelloCard(
-      eventType,
-      `New ${eventType} event received`,
-      eventType
-    );
-
-    // Set response headers
     res.setHeader("x-github-event", eventType);
     res.status(200).json({ success: true });
   } catch (error) {
