@@ -4,7 +4,7 @@ This project enables seamless integration between GitHub, Trello, and Slack, fac
 
 ![eraser.io](https://github.com/bobbyy16/slack-trello-github-integration/blob/main/pictures/flow.png)
 
-!(https://www.loom.com/share/f6675f9961d74f0fb496bc2d82bfa510?sid=054f4033-e708-4e3c-828e-59d501f18b31)(demo video)
+[Demo Video](https://www.loom.com/share/f6675f9961d74f0fb496bc2d82bfa510?sid=054f4033-e708-4e3c-828e-59d501f18b31)
 
 ## Table of Contents
 
