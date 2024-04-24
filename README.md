@@ -42,44 +42,45 @@ OTHERS_CARD=<others_list_id>
 
 # Slack Webhook URL
 SLACK_WEBHOOK_URL=<your_slack_webhook_url>
+```
+
 ## Usage
 
-* Start the Server: Run `npm start` to start the server.
-* Configure GitHub Webhooks: Set up GitHub webhooks to send events to the endpoint exposed by the server.
-* Monitor Logs: Keep an eye on the console logs for any errors or unexpected behavior during event processing.
+- Start the Server: Run `npm start` to start the server.
+- Configure GitHub Webhooks: Set up GitHub webhooks to send events to the endpoint exposed by the server.
+- Monitor Logs: Keep an eye on the console logs for any errors or unexpected behavior during event processing.
 
 ## Technologies
 
-* Node.js
-* Express.js
-* Trello API
-* Slack Webhooks
+- Node.js
+- Express.js
+- Trello API
+- Slack Webhooks
 
 ## Functionality
 
 ### GitHub Event Handling
 
-* Listens for various GitHub events including issues, pull requests, and pushes.
-* Processes each event and creates corresponding Trello cards.
-* Ignores certain event types like status checks and deployments.
+- Listens for various GitHub events including issues, pull requests, and pushes.
+- Processes each event and creates corresponding Trello cards.
+- Ignores certain event types like status checks and deployments.
 
 ### Trello Integration
 
-* Utilizes the Trello API to create cards on specific Trello boards.
-* Differentiates between issues, pull requests, and other events to assign cards to appropriate lists.
+- Utilizes the Trello API to create cards on specific Trello boards.
+- Differentiates between issues, pull requests, and other events to assign cards to appropriate lists.
 
 ### Slack Notifications
 
-* Sends event notifications to Slack using webhooks.
-* Includes event details such as event type, issue/pull request details, and relevant URLs.
+- Sends event notifications to Slack using webhooks.
+- Includes event details such as event type, issue/pull request details, and relevant URLs.
 
 ## Notes
 
-* Ensure that environment variables are properly configured, including Trello API key, token, and list IDs.
-* Regularly monitor server logs for any issues or errors.
-* Customize event handling and notifications based on specific project requirements.
+- Ensure that environment variables are properly configured, including Trello API key, token, and list IDs.
+- Regularly monitor server logs for any issues or errors.
+- Customize event handling and notifications based on specific project requirements.
 
 ## Contributing
 
 We welcome contributions! Feel free to submit issues and pull requests to improve the project.
-```
