@@ -25,4 +25,32 @@ const postToSlack = async (message, eventType) => {
   }
 };
 
+// const postToSlack = async (message, eventType, eventData) => {
+//   try {
+//     const webhookUrl = listId[eventType];
+//     if (!webhookUrl) {
+//       console.error("No webhook URL found for event type:", eventType);
+//       return;
+//     }
+
+//     let updatedMessage = message;
+
+//     // Check if the event is an issue or pull request and if it's closed
+//     if (
+//       (eventType === "ISSUES" || eventType === "PULL_REQUEST") &&
+//       eventData.action === "closed"
+//     ) {
+//       updatedMessage += ":x: closed"; // Append "x" emoji for closed issues or pull requests
+//     }
+
+//     const webhook = new IncomingWebhook(webhookUrl);
+//     await webhook.send({
+//       text: updatedMessage,
+//     });
+//     console.log("Message posted to Slack");
+//   } catch (error) {
+//     console.error("Error posting to Slack:", error);
+//   }
+// };
+
 module.exports = { postToSlack };
