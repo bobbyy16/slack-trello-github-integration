@@ -24,9 +24,9 @@ const handleGitHubEvent = async (req, res) => {
 
     const eventData = req.body;
 
-    let eventTitle = `New GitHub ${eventType} event`;
+    let eventTitle = `New ${eventType}`;
 
-    let eventDescription = `Event Type: ${eventType}\n\n`;
+    let eventDescription = ` `;
 
     switch (eventType) {
       case "ISSUES":
