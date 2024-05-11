@@ -34,21 +34,33 @@ const handleGitHubEvent = async (req, res) => {
         eventDescription += `Issue Title: ${eventData.issue.title}\n`;
         eventDescription += `Issue URL: ${eventData.issue.html_url}\n`;
         await createTrelloCard(eventTitle, eventDescription, eventType);
-        await postToSlack(eventTitle + "\n" + eventDescription, eventType);
+        await postToSlack(
+          eventTitle + "\n" + eventDescription,
+          eventType,
+          eventData
+        );
         break;
       case "PULL_REQUEST":
         eventDescription += `Pull Request Number: ${eventData.pull_request.number}\n`;
         eventDescription += `Pull Request Title: ${eventData.pull_request.title}\n`;
         eventDescription += `Pull Request URL: ${eventData.pull_request.html_url}\n`;
         await createTrelloCard(eventTitle, eventDescription, eventType);
-        await postToSlack(eventTitle + "\n" + eventDescription, eventType);
+        await postToSlack(
+          eventTitle + "\n" + eventDescription,
+          eventType,
+          eventData
+        );
         break;
       case "PUSH":
         eventDescription += `Pusher Username: ${eventData.pusher.name}\n`;
         eventDescription += `Commits Count: ${eventData.commits.length}\n`;
         eventDescription += `Compare URL: ${eventData.compare}\n`;
         await createTrelloCard(eventTitle, eventDescription, eventType);
-        await postToSlack(eventTitle + "\n" + eventDescription, eventType);
+        await postToSlack(
+          eventTitle + "\n" + eventDescription,
+          eventType,
+          eventData
+        );
         break;
       default:
         console.log("Unknown event type:", eventType);
