@@ -23,15 +23,12 @@ const handleGitHubEvent = async (req, res) => {
     }
 
     const eventData = req.body;
-
-    let eventTitle = `New ${eventType}`;
-
+    let eventTitle = ``;
     let eventDescription = ` `;
 
     switch (eventType) {
       case "ISSUES":
-        eventDescription += `Issue Number: ${eventData.issue.number}\n`;
-        eventDescription += `Issue Title: ${eventData.issue.title}\n`;
+        eventTitle += `Issue Number: ${eventData.issue.number} - ${eventData.issue.title}`;
         eventDescription += `Issue URL: ${eventData.issue.html_url}\n`;
         await createTrelloCard(eventTitle, eventDescription, eventType);
         await postToSlack(
@@ -41,9 +38,27 @@ const handleGitHubEvent = async (req, res) => {
         );
         break;
       case "PULL_REQUEST":
-        eventDescription += `Pull Request Number: ${eventData.pull_request.number}\n`;
-        eventDescription += `Pull Request Title: ${eventData.pull_request.title}\n`;
+        eventTitle += `Pull Request Number: ${eventData.pull_request.number} - ${eventData.pull_request.title}`;
         eventDescription += `Pull Request URL: ${eventData.pull_request.html_url}\n`;
+
+        const linkedIssues = eventData.pull_request.body.match(/#(\d+)/g);
+        if (linkedIssues && linkedIssues.length > 0) {
+          eventDescription += "Linked Issues:";
+          for (const linkedIssue of linkedIssues) {
+            const issueNumber = linkedIssue.substring(1);
+            const issueUrl = `${eventData.repository.html_url}/issues/${issueNumber}`;
+            eventDescription += `  - Issue Number: ${issueNumber}, URL: ${issueUrl}\n`;
+          }
+        }
+
+        const assignees = eventData.pull_request.assignees;
+        if (assignees && assignees.length > 0) {
+          eventDescription += "Assignees:";
+          for (const assignee of assignees) {
+            eventDescription += `  - ${assignee.login}\n`;
+          }
+        }
+
         await createTrelloCard(eventTitle, eventDescription, eventType);
         await postToSlack(
           eventTitle + "\n" + eventDescription,
@@ -51,7 +66,9 @@ const handleGitHubEvent = async (req, res) => {
           eventData
         );
         break;
+
       case "PUSH":
+        eventTitle += `Recent push`;
         eventDescription += `Pusher Username: ${eventData.pusher.name}\n`;
         eventDescription += `Commits Count: ${eventData.commits.length}\n`;
         eventDescription += `Compare URL: ${eventData.compare}\n`;
@@ -64,6 +81,7 @@ const handleGitHubEvent = async (req, res) => {
         break;
       default:
         console.log("Unknown event type:", eventType);
+        break;
     }
 
     res.setHeader("x-github-event", eventType);
